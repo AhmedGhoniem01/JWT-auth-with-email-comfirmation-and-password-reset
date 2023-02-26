@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+<%- include("../partials/head") %>
+
+  <body id="body"  >
+
+    <header class="myheader">
+      <h1>RPA Development</h1>
+      <%- include("../partials/nav") %>
+    </header>
+
+    <main id="main"> 
+        <section>
+            <h1>
+                LOGIN
+            </h1>
+            <br>
+            <form>
+                <!-- <label for="name">Name</label>
+                <input id="name" name="name" type="text"  > 
+                <div class="name error"></div> -->
+                <!-- <br> -->
+                <label for="email">E-mail</label>
+                <input id="email" name="email" type="email"  > 
+                <div class="email error"></div>
+                <br>
+                <label for="password">Password</label>
+                <input id="password" name="password" type="password"  > 
+                <div class="password error"></div>
+                <br>
+                <button>Login</button>
+            </form>
+        </section>
+    </main>
+
+    <%- include("../partials/footer") %>
+    
+  </body>
+</html>
+
+<script>
+  const form = document.querySelector("form");
+  const emailError = document.querySelector(".email.error");
+  const passwordError = document.querySelector(".password.error");
+
+  form.addEventListener("submit" , async (e) => {
+    e.preventDefault();
+    
+    //reset displayed errors
+    emailError.textContent = "";
+    passwordError.textContent="";
+
+    //fetch email and password values
+    const email = form.email.value;
+    const password = form.password.value;
+
+    //using fetch api to send a post req
+    try{
+      const res = await fetch("/login" , {
+        method: 'POST',
+        body: JSON.stringify({email,password}),
+        headers: {'Content-Type' : 'application/json'}
+      });
+
+      const data = await res.json();
+      console.log(data);
+      
+      if(data.errors){
+        emailError.textContent = errors.email;
+        passwordError.textContent = errors.password;        
+      }
+
+      if(data.user){
+        location.assign("/");
+      }
+
+    }catch(err){
+      console.log(err);
+    }
+
+  })
+</script>
